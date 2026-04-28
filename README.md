@@ -19,5 +19,5 @@ Book Tracker - это графическое приложение для уче�
 
 1. Скачивание программы
 ```bash
-git clone https://github.com/ВАШ_ПОЛЬЗОВАТЕЛЬ/book-tracker.git
+git clone https://github.com/iqmeow/book-tracker.git
 cd book-tracker
