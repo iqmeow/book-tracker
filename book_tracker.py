@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 import json
 import os
 from datetime import datetime
@@ -51,7 +51,7 @@ class BookTracker:
         self.pages_entry.grid(row=1, column=3, padx=5, pady=5)
         
         # Кнопка добавления
-        tk.Button(input_frame, text="➕ Добавить книгу", command=self.add_book, 
+        tk.Button(input_frame, text="Добавить книгу", command=self.add_book, 
                  bg="#4CAF50", fg="white", font=("Arial", 10, "bold")).grid(row=2, column=0, columnspan=4, pady=10)
     
     def create_table_frame(self):
@@ -86,11 +86,11 @@ class BookTracker:
         btn_frame = tk.Frame(table_frame)
         btn_frame.pack(fill="x", pady=10)
         
-        tk.Button(btn_frame, text="🗑 Удалить выбранную", command=self.delete_book, 
+        tk.Button(btn_frame, text="Удалить выбранную", command=self.delete_book, 
                  bg="#f44336", fg="white").pack(side="left", padx=5)
-        tk.Button(btn_frame, text="💾 Сохранить в JSON", command=self.save_to_json, 
+        tk.Button(btn_frame, text="Сохранить в JSON", command=self.save_to_json, 
                  bg="#2196F3", fg="white").pack(side="left", padx=5)
-        tk.Button(btn_frame, text="📂 Загрузить из JSON", command=self.load_from_json, 
+        tk.Button(btn_frame, text="Загрузить из JSON", command=self.load_from_json, 
                  bg="#FF9800", fg="white").pack(side="left", padx=5)
     
     def create_filter_frame(self):
@@ -149,7 +149,7 @@ class BookTracker:
         }
         
         self.books.append(book)
-        self.save_data()  # Автосохранение
+        self.save_data()
         self.clear_input_fields()
         self.apply_filters()
         messagebox.showinfo("Успех", f"Книга '{title}' добавлена!")
@@ -162,10 +162,8 @@ class BookTracker:
             return
         
         if messagebox.askyesno("Подтверждение", "Удалить выбранную книгу?"):
-            # Получаем индекс выбранной книги
             for item in selected:
                 item_text = self.tree.item(item, "values")
-                # Ищем книгу в оригинальном списке
                 for i, book in enumerate(self.books):
                     if (book["title"] == item_text[0] and 
                         book["author"] == item_text[1] and
@@ -205,7 +203,7 @@ class BookTracker:
         total_pages = sum(b["pages"] for b in self.books)
         
         self.stats_label.config(
-            text=f"📚 Всего книг: {total_books} | Показано: {shown_books} | 📖 Всего страниц: {total_pages}"
+            text=f"Всего книг: {total_books} | Показано: {shown_books} | Всего страниц: {total_pages}"
         )
         
         self.refresh_table()
@@ -218,11 +216,9 @@ class BookTracker:
     
     def refresh_table(self):
         """Обновление таблицы"""
-        # Очистка таблицы
         for item in self.tree.get_children():
             self.tree.delete(item)
         
-        # Заполнение таблицы
         for book in self.filtered_books:
             self.tree.insert("", "end", values=(
                 book["title"],
@@ -250,7 +246,6 @@ class BookTracker:
     
     def load_from_json(self):
         """Загрузка из JSON файла"""
-        from tkinter import filedialog
         file_path = filedialog.askopenfilename(
             title="Выберите JSON файл",
             filetypes=[("JSON files", "*.json"), ("All files", "*.*")]
@@ -261,7 +256,6 @@ class BookTracker:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     loaded_books = json.load(f)
                 
-                # Проверка структуры данных
                 for book in loaded_books:
                     if all(k in book for k in ["title", "author", "genre", "pages"]):
                         self.books.append(book)
